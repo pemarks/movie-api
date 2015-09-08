@@ -11,19 +11,26 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import com.deloitte.movie.models.Movie;
 import com.deloitte.movie.models.Showtime;
 import com.deloitte.movie.models.Theater;
+import com.deloitte.movie.models.enumerations.Genre;
+import com.deloitte.movie.models.enumerations.Rating;
 import com.deloitte.movie.services.GoogleMovieParsingService;
 
 public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService {	
@@ -32,6 +39,14 @@ public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService 
 		.parseDefaulting(ChronoField.AMPM_OF_DAY, 1)
 		.toFormatter();
 	
+	private static final Map<String, Pattern> REGEX_MAP = new HashMap<String, Pattern>();
+	
+	static {
+		REGEX_MAP.put("runtime", Pattern.compile("^\\d*hr\\s*\\d*min$"));
+		REGEX_MAP.put("rating", Pattern.compile("^Rated\\s*(G|PG-13|PG|R|NC-17)$"));
+		REGEX_MAP.put("genre", Pattern.compile("^((\\w?)/?)*$"));
+	}
+	
 	@Override
 	public List<Theater> parseTheaters(InputStream ios) {
 		final List<Theater> theaters = new ArrayList<Theater>();
@@ -39,8 +54,6 @@ public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService 
 		try {
 			Document htmlDoc = Jsoup.parse(ios, StandardCharsets.UTF_8.name(), "");
 			final int date = findSelectedDate(htmlDoc);
-			
-			
 			
 			htmlDoc.select(".theater")
 				.stream()
@@ -78,25 +91,22 @@ public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService 
 							showtimes
 								.stream()
 								.forEach(showtime -> {
-									showtime.setId(id);
 									showtime.setMovie(movie);
 									showtime.setTheater(theater);
+									
+									theater.getShowtimes().add(showtime);
+									showtime.setId(theater.getShowtimes().size());
 								});
-
-							
-												
 						});
 					
-					Collections.sort(theater.getShowtimes());
-					
+					Collections.sort(theater.getShowtimes());	
 					theaters.add(theater);
 				});
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 		
-		Collections.sort(theaters);
-		
+		Collections.sort(theaters);		
 		return theaters;
 	}
 
@@ -159,7 +169,70 @@ public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService 
 				String movieURL = movieNameElement.attr("href");
 				
 				movie.setId(movieURL.substring(movieURL.lastIndexOf('=') + 1));								
-				movie.setName(movieNameElement.text());
+				movie.setName(movieNameElement.text());								
+			});
+		
+		movieElement.select("span.info")
+			.stream()
+			.findAny()
+			.ifPresent(movieInfoElement -> {
+				final List<String> infoParts = Arrays.asList(movieInfoElement.text().split(" - "));
+				
+				REGEX_MAP
+					.entrySet()
+						.stream()
+						.forEach(entry -> {
+							String matchedString = infoParts
+								.stream()
+								.filter(entry.getValue().asPredicate())
+								.findAny()
+								.orElse(null);
+							
+							if (matchedString != null) {
+								switch(entry.getKey()) {
+									case "runtime": {
+										String hourString = matchedString.substring(0, matchedString.indexOf('h')),
+											minuteString = matchedString.substring(matchedString.lastIndexOf(' '), matchedString.indexOf('m'));
+										
+										if (hourString != null) {
+											movie.setHours(Integer.valueOf(hourString.trim()));
+										} else {
+											movie.setHours(1);
+										}
+										
+										if (minuteString != null) {
+											movie.setMinutes(Integer.valueOf(minuteString.trim()));
+										} else {
+											movie.setMinutes(45);
+										}
+										
+										break;
+									}
+									case "rating": {
+										String ratingString = matchedString.substring(matchedString.lastIndexOf(' '));
+										
+										if (ratingString != null) {
+											movie.setRating(Rating.getRating(ratingString.trim()));
+										} else {
+											movie.setRating(Rating.PG13);
+										}
+										
+										break;
+									}
+									case "genre": {
+										String[] genres = matchedString.split("/");
+										
+										for (String genre : genres) {
+											movie.getGenres().add(Genre.getGenre(genre.trim()));
+										}
+										break;
+									}
+									default: {
+										
+									}
+								}
+							}
+						});
 			});
 		
 		return movie;
