@@ -16,6 +16,7 @@ public class Movie implements Comparable<Movie> {
 	private String name;
 	private String description;
 	
+	private String imdbURL;
 	private String trailerURL;
 	private String posterURL;
 	
@@ -60,6 +61,12 @@ public class Movie implements Comparable<Movie> {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getImdbURL() {
+		return imdbURL;
+	}
+	public void setImdbURL(String imdbURL) {
+		this.imdbURL = imdbURL;
 	}
 	public String getPosterURL() {
 		return posterURL;

@@ -172,6 +172,7 @@ public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService 
 				movie.setName(movieNameElement.text());								
 			});
 		
+		//Get the movie information
 		movieElement.select("span.info")
 			.stream()
 			.findAny()
@@ -233,9 +234,29 @@ public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService 
 								}
 							}
 						});
+				
+				movieInfoElement.children()
+					.stream()
+					.forEach(urlElement -> {
+						if ("trailer".equalsIgnoreCase(urlElement.text().trim())) {							
+							movie.setTrailerURL(getFormattedURL(urlElement.attr("href")));
+						} else if ("imdb".equalsIgnoreCase(urlElement.text().trim())) {
+							movie.setImdbURL(getFormattedURL(urlElement.attr("href")));							
+						}
+					});
 			});
 		
 		return movie;
+	}
+	
+	private String getFormattedURL(final String _url) {
+		String url = _url;
+		
+		if (_url.startsWith("/url?q=")) {
+			url = _url.substring(7);
+		}
+		
+		return url;
 	}
 	
 	private List<Showtime> getShowtimes(final Element movieElement, final int date) {
