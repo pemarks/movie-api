@@ -1,4 +1,4 @@
-package com.deloitte.movie.services;
+package com.squid.movie.services;
 
 public interface GoogleMovieAPIService {
 

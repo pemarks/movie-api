@@ -1,4 +1,4 @@
-package com.deloitte.movie.models.enumerations;
+package com.squid.movie.models.enumerations;
 
 public enum Genre {
 	ACTION, ADVENTURE, SUSPENSE, THRILLER, DRAMA, HORROR, COMEDY,

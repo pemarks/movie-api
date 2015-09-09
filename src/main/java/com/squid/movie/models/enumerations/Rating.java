@@ -1,4 +1,4 @@
-package com.deloitte.movie.models.enumerations;
+package com.squid.movie.models.enumerations;
 
 public enum Rating {
 	G("G"), PG("PG"), PG13("PG-13"), R("R"), NC17("NC-17"), X("X");

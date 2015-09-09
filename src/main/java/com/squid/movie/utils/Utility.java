@@ -1,4 +1,4 @@
-package com.deloitte.movie.utils;
+package com.squid.movie.utils;
 
 public abstract class Utility {
 	

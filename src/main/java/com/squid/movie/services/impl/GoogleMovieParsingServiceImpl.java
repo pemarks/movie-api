@@ -1,4 +1,4 @@
-package com.deloitte.movie.services.impl;
+package com.squid.movie.services.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,12 +26,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.deloitte.movie.models.Movie;
-import com.deloitte.movie.models.Showtime;
-import com.deloitte.movie.models.Theater;
-import com.deloitte.movie.models.enumerations.Genre;
-import com.deloitte.movie.models.enumerations.Rating;
-import com.deloitte.movie.services.GoogleMovieParsingService;
+import com.squid.movie.models.*;
+import com.squid.movie.models.enumerations.*;
+import com.squid.movie.services.GoogleMovieParsingService;
 
 public class GoogleMovieParsingServiceImpl implements GoogleMovieParsingService {	
 	private static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()

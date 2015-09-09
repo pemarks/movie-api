@@ -1,9 +1,9 @@
-package com.deloitte.movie.repositories;
+package com.squid.movie.repositories;
 
 import java.util.Date;
 import java.util.List;
 
-import com.deloitte.movie.models.*;
+import com.squid.movie.models.*;
 
 public interface GoogleMovieAPIRepository {
 	List<Theater> getTheaters(String location, Date date);

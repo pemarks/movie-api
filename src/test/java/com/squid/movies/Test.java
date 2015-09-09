@@ -1,13 +1,11 @@
-package com.deloitte.movies;
+package com.squid.movies;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.swing.text.DateFormatter;
-
-import com.deloitte.movie.models.Theater;
-import com.deloitte.movie.repositories.GoogleMovieAPIRepository;
-import com.deloitte.movie.repositories.impl.GoogleMovieAPIRepositoryImpl;
+import com.squid.movie.models.Theater;
+import com.squid.movie.repositories.GoogleMovieAPIRepository;
+import com.squid.movie.repositories.impl.GoogleMovieAPIRepositoryImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

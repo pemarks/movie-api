@@ -1,4 +1,4 @@
-package com.deloitte.movie.models;
+package com.squid.movie.models;
 
 import java.util.ArrayList;
 import java.util.List;

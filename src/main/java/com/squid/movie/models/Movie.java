@@ -1,10 +1,10 @@
-package com.deloitte.movie.models;
+package com.squid.movie.models;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.deloitte.movie.models.enumerations.Genre;
-import com.deloitte.movie.models.enumerations.Rating;
+import com.squid.movie.models.enumerations.Genre;
+import com.squid.movie.models.enumerations.Rating;
 
 public class Movie implements Comparable<Movie> {
 	private String id;

@@ -1,4 +1,4 @@
-package com.deloitte.movie.repositories.impl;
+package com.squid.movie.repositories.impl;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,11 +15,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
-import com.deloitte.movie.models.Movie;
-import com.deloitte.movie.models.Theater;
-import com.deloitte.movie.repositories.GoogleMovieAPIRepository;
-import com.deloitte.movie.services.GoogleMovieParsingService;
-import com.deloitte.movie.services.impl.GoogleMovieParsingServiceImpl;
+import com.squid.movie.models.Movie;
+import com.squid.movie.models.Theater;
+import com.squid.movie.repositories.GoogleMovieAPIRepository;
+import com.squid.movie.services.GoogleMovieParsingService;
+import com.squid.movie.services.impl.GoogleMovieParsingServiceImpl;
 
 public class GoogleMovieAPIRepositoryImpl implements GoogleMovieAPIRepository {
 	private final CloseableHttpClient CLIENTS;
